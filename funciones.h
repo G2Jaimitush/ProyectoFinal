@@ -2,12 +2,15 @@ void IngresoDatos() {
     struct Contaminante {
         char nom[20];
     };
+
     struct registroFecha {
         int day;
         int month;
         int year;
         int hour;   
     };
+
+    
     typedef struct registroFecha Fecha;
     struct Zona {
         char nombre[20];
@@ -121,6 +124,7 @@ void IngresoDatos() {
         }
     }
 }
+
 /*
 void CalcProximas24Horas(zonas, zonas24) {
     // Esta función se encarga de calcular los niveles de contaminación en las próximas 24 horas.
