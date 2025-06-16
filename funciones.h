@@ -40,69 +40,148 @@ void IngresoDatos() {
 
     // Validación del año
     int valido = 0;
-    while (valido == 0) {
-        printf("Ingrese el año actual: ");
-        scanf("%d", &fecha.year);
+    float valido2 = 0;
+
+    REPETIR:
+        while (valido == 0) {
+        printf("Ingrese el periodo actual entre 2025 - 2100: ");
+
+        if (scanf("%f", &valido2) != 1) {
+            printf("Debe ingresar un numero, ingrese de nuevo.\n");
+            while (getchar() != '\n'); // Limpia el buffer
+            goto REPETIR;
+        }
+
+        // Validación de que el número ingresado sea un entero
+        if (ceilf(valido2) != valido2) {
+            printf("Debe ingresar un numero entero, ingrese de nuevo.\n");
+            while (getchar() != '\n'); // Limpia el buffer
+            goto REPETIR;
+        }
+
+        fecha.year = (int)valido2; // Convertir float a int
+
         if (fecha.year >= 2025 && fecha.year <= 2100) {
             valido = 1;
         } else {
-            printf("Año invalido. Debe ser entre 2025 y 2100.\n");
+            printf("Periodo invalido. Debe ser entre 2025 y 2100.\n");
+            goto REPETIR;
         }
     }
 
     // Validación del mes
     valido = 0;
+    valido2 = 0;
+
+    REPETIR_MES:
     while (valido == 0) {
-        printf("Ingrese el mes actual: ");
-        scanf("%d", &fecha.month);
+        printf("Ingrese el mes actual (1 - 12): ");
+
+        if (scanf("%f", &valido2) != 1) {
+            printf("Debe ingresar un numero. Intente de nuevo.\n");
+            while (getchar() != '\n');
+            goto REPETIR_MES;
+        }
+
+        if (ceilf(valido2) != valido2) {
+            printf("Debe ingresar un numero entero. Intente de nuevo.\n");
+            while (getchar() != '\n');
+            goto REPETIR_MES;
+        }
+
+        fecha.month = (int)valido2;
+
         if (fecha.month >= 1 && fecha.month <= 12) {
             valido = 1;
         } else {
-            printf("Mes invalido. Debe ser entre 1 y 12.\n");
+            printf("Mes invalido. Debe estar entre 1 y 12.\n");
+            goto REPETIR_MES;
         }
     }
 
     // Validación del día
     valido = 0;
+    valido2 = 0;
+
+    REPETIR_DIA:
     while (valido == 0) {
         int max_dia = 31;
+
+        // Determinar la cantidad de días del mes
         if (fecha.month == 2) {
             if ((fecha.year % 4 == 0 && fecha.year % 100 != 0) || (fecha.year % 400 == 0)) {
                 max_dia = 29;
-                printf("Febrero tiene 29 días en el año %d.\n", fecha.year);
+                printf("Febrero tiene 29 días en el periodo %d.\n", fecha.year);
             } else {
                 max_dia = 28;
-                printf("Febrero tiene 28 días en el año %d.\n", fecha.year);
+                printf("Febrero tiene 28 días en el periodo %d.\n", fecha.year);
             }
         } else if (fecha.month == 4 || fecha.month == 6 || fecha.month == 9 || fecha.month == 11) {
             max_dia = 30;
             printf("Este mes tiene 30 días.\n");
         } else {
+            max_dia = 31;
             printf("Este mes tiene 31 días.\n");
         }
-        printf("Ingrese el dia actual: ");
-        scanf("%d", &fecha.day);
+
+        printf("Ingrese el día actual (1 - %d): ", max_dia);
+
+        if (scanf("%f", &valido2) != 1) {
+            printf("Debe ingresar un numero. Intente de nuevo.\n");
+            while (getchar() != '\n');
+            goto REPETIR_DIA;
+        }
+
+        if (ceilf(valido2) != valido2) {
+            printf("Debe ingresar un numero entero. Intente de nuevo.\n");
+            while (getchar() != '\n');
+            goto REPETIR_DIA;
+        }
+
+        fecha.day = (int)valido2;
+
         if (fecha.day >= 1 && fecha.day <= max_dia) {
             valido = 1;
         } else {
-            printf("Dia invalido. Debe ser entre 1 y %d.\n", max_dia);
+            printf("Día invalido. Debe ser entre 1 y %d.\n", max_dia);
+            goto REPETIR_DIA;
         }
     }
 
     // Validación de la hora
     valido = 0;
+    valido2 = 0;
+
+    REPETIR_HORA:
     while (valido == 0) {
-        printf("Ingrese la hora actual (0-23): ");
-        scanf("%d", &fecha.hour);
+        printf("Ingrese la hora actual (0 - 23): ");
+
+        if (scanf("%f", &valido2) != 1) {
+            printf("Debe ingresar un numero. Intente de nuevo.\n");
+            while (getchar() != '\n');
+            goto REPETIR_HORA;
+        }
+
+        if (ceilf(valido2) != valido2) {
+            printf("Debe ingresar un numero entero. Intente de nuevo.\n");
+            while (getchar() != '\n');
+            goto REPETIR_HORA;
+        }
+
+        fecha.hour = (int)valido2;
+
         if (fecha.hour >= 0 && fecha.hour <= 23) {
             valido = 1;
         } else {
-            printf("Hora invalida. Debe ser entre 0 y 23.\n");
+            printf("Hora invalida. Debe estar entre 0 y 23.\n");
+            goto REPETIR_HORA;
         }
     }
 
-    printf("Fecha y hora de registro: %02d/%02d/%04d %02d:00\n", 
-           fecha.day, fecha.month, fecha.year, fecha.hour);
+    printf("Fecha y hora de registro: %02d/%02d/%04d %02d:00\n",
+        fecha.day, fecha.month, fecha.year, fecha.hour);
+
+
 
     // Ingreso de datos de contaminación
     printf("Ingrese los niveles de contaminacion para las siguientes zonas:\n");
@@ -124,6 +203,8 @@ void IngresoDatos() {
         }
     }
 }
+
+
 
 /*
 void CalcProximas24Horas(zonas, zonas24) {
