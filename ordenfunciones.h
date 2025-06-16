@@ -1,4 +1,4 @@
-#include "funciones.h"
+#include "Funciones.h"
 #include <stdio.h>
 void Inicioprograma();
 // Función para iniciar el programa

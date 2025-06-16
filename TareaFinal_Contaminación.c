@@ -15,7 +15,7 @@ Header 1
 
 *******************************************************************************/
 #include <stdio.h>
-#include "ordenfunciones.h"
+#include "OrdenFunciones.h"
 #include <math.h>
 
 
