@@ -1,44 +1,46 @@
-void IngresoDatos() {
-    struct Contaminante {
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+//Estructuras
+struct Contaminante {
         char nom[20];
     };
-
     struct registroFecha {
         int day;
         int month;
         int year;
         int hour;   
     };
-
-    
     typedef struct registroFecha Fecha;
     struct Zona {
         char nombre[20];
         struct Contaminante contaminantes[5];
         float contamDatos[5];
-        float pendiente;
+        float pendiente[5];
     };
 
     struct Zona zonas[5] = {
-        {"Belisario", {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{-0.002}},
-        {"Centro",    {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{-0.00380303030303031}},
-        {"El Camal",  {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{-0.004893939}},
-        {"Condado",   {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{0}},
-        {"Turubamba", {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{0}}
+        {"Belisario", {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{-0.002,0,0,0,0}},
+        {"Centro",    {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{-0.00380303030303031,0,0,0,0}},
+        {"Cotocollao",  {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{-0.004893939,0,0,0,0}},
+        {"Los Chillos",   {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{0,0,0,0,0}},
+        {"Tumbaco", {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{0,0,0,0,0}}
     };
     struct Zona zonas24[5] = {
         {"Belisario", {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{-0.002}},
         {"Centro",    {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{-0.00380303030303031}},
-        {"El Camal",  {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{-0.004893939}},
-        {"Condado",   {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{0}},
-        {"Turubamba", {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{0}}
+        {"Cotocollao",  {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{-0.004893939}},
+        {"Los Chillos",   {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{0}},
+        {"Tumbaco", {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0},{0}}
     };
 
     int cantidad = 5; // Número de zonas
 
     struct registroFecha fecha;
 
-    // Validación del año
+void IngresoDatos(){
+
+ // Validación del año
     int valido = 0;
     float valido2 = 0;
 
@@ -111,20 +113,20 @@ void IngresoDatos() {
         if (fecha.month == 2) {
             if ((fecha.year % 4 == 0 && fecha.year % 100 != 0) || (fecha.year % 400 == 0)) {
                 max_dia = 29;
-                printf("Febrero tiene 29 días en el periodo %d.\n", fecha.year);
+                printf("Febrero tiene 29 dias en el periodo %d.\n", fecha.year);
             } else {
                 max_dia = 28;
-                printf("Febrero tiene 28 días en el periodo %d.\n", fecha.year);
+                printf("Febrero tiene 28 dias en el periodo %d.\n", fecha.year);
             }
         } else if (fecha.month == 4 || fecha.month == 6 || fecha.month == 9 || fecha.month == 11) {
             max_dia = 30;
-            printf("Este mes tiene 30 días.\n");
+            printf("Este mes tiene 30 dias.\n");
         } else {
             max_dia = 31;
-            printf("Este mes tiene 31 días.\n");
+            printf("Este mes tiene 31 dias.\n");
         }
 
-        printf("Ingrese el día actual (1 - %d): ", max_dia);
+        printf("Ingrese el dia actual (1 - %d): ", max_dia);
 
         if (scanf("%f", &valido2) != 1) {
             printf("Debe ingresar un numero. Intente de nuevo.\n");
@@ -143,7 +145,7 @@ void IngresoDatos() {
         if (fecha.day >= 1 && fecha.day <= max_dia) {
             valido = 1;
         } else {
-            printf("Día invalido. Debe ser entre 1 y %d.\n", max_dia);
+            printf("Dia invalido. Debe ser entre 1 y %d.\n", max_dia);
             goto REPETIR_DIA;
         }
     }
@@ -182,7 +184,6 @@ void IngresoDatos() {
         fecha.day, fecha.month, fecha.year, fecha.hour);
 
 
-
     // Ingreso de datos de contaminación
     printf("Ingrese los niveles de contaminacion para las siguientes zonas:\n");
     for (int i = 0; i < cantidad; i++) {
@@ -204,22 +205,40 @@ void IngresoDatos() {
     }
 }
 
-
-
-/*
-void CalcProximas24Horas(zonas, zonas24) {
+void CalcProximas24Horas() {
     // Esta función se encarga de calcular los niveles de contaminación en las próximas 24 horas.
     for(int i = 0; i < 5; i++) {
         
         for(int j = 0; j < 5; j++) {
             // Aquí se implementaría la lógica para calcular los niveles de contaminación.
             // Por simplicidad, solo se imprime un mensaje.
-            printf("Calculando niveles de %s en %s...\n", 
-                   zonas[i].contaminantes[j].nom, zonas[i].nombre);
-                   zonas24[i].contamDatos[j] = zonas[i].contamDatos[j] *zonas[i].pendiente; // Simulación de aumento del 10%
+            printf("Calculando niveles de %s en %s...\n", zonas[i].contaminantes[j].nom, zonas[i].nombre);
+                   zonas24[i].contamDatos[j] = zonas[i].contamDatos[j] *zonas[i].pendiente[j]; 
+            
         }
-        // Aquí se implementaría la lógica para calcular los niveles de contaminación.
-        // Por simplicidad, solo se imprime un mensaje.
+        
     }
 }
-*/
+void GenerarReporte() {
+    FILE *reporte = fopen("reporte_contaminacion.txt", "w");
+    if (reporte == NULL) {
+        printf("No se pudo crear el archivo de reporte.\n");
+        return;
+    }
+    fprintf(reporte, "Fecha y hora de registro: %02d/%02d/%04d %02d:00\n\n", 
+            fecha.day, fecha.month, fecha.year, fecha.hour);
+    fprintf(reporte, "Zona\t\tContaminante\tActual\tPredicción 24h\tPendiente\n");
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            fprintf(reporte, "%-12s\t%-12s\t%.2f\t%.2f\t%.6f\n",
+                zonas[i].nombre,
+                zonas[i].contaminantes[j].nom,
+                zonas[i].contamDatos[j],
+                zonas24[i].contamDatos[j],
+                zonas[i].pendiente[j]);
+        }
+        //AQUÍ FALTA IMRIMIR ALERTAS Y RECOMENDACIONES
+    }
+    fclose(reporte);
+    printf("Reporte generado correctamente.\n");
+}
