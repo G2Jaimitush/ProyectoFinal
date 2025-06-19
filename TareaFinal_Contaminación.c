@@ -12,7 +12,6 @@ Header 1
 6. Mostrar recomendaciones según rangos de contaminación
 7. Funciones de archivos para guardar datos, predicciones y recomendaciones a modo de reporte
 
-
 *******************************************************************************/
 #include <stdio.h>
 #include "ordenfunciones.h"
@@ -20,6 +19,6 @@ Header 1
 int main()
 {
     Inicioprograma();
-    
+
     return 0;
 }

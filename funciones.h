@@ -219,6 +219,7 @@ void CalcProximas24Horas() {
         
     }
 }
+
 void GenerarReporte() {
     FILE *reporte = fopen("reporte_contaminacion.txt", "w");
     if (reporte == NULL) {
@@ -242,3 +243,4 @@ void GenerarReporte() {
     fclose(reporte);
     printf("Reporte generado correctamente.\n");
 }
+

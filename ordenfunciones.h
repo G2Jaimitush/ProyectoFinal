@@ -10,4 +10,5 @@ printf("Programa iniciado correctamente.\n");
     IngresoDatos();
     CalcProximas24Horas();
     GenerarReporte();
+    CargarDatosHistoricosCO2("datos_historicos_CO2.txt");
 };
