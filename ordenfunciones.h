@@ -8,8 +8,10 @@ void Inicioprograma(){
     printf("Programa iniciado correctamente.\n");
     
     IngresoDatos();
+    GuardarDatosCO2();
     CalcProximas24Horas();
     GenerarReporte();
+    MostrarReporte();
 
     
 };

@@ -246,6 +246,47 @@ void GenerarReporte() {
 }
 
 
+void GuardarDatosCO2 (){
+    //Abre el archivo CSV para guardar los datos de CO2
+    FILE *archivo = fopen("C:\\Users\\jaime\\Documents\\Ejercicios VSCode\\.vscode\\ProyectoFinalProgramacion\\ProyectoFinal\\DatosHistoticosCO2.csv", "a");
+
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo CSV para escritura.\n");
+        return;
+    }
+
+    for (int i = 0; i < cantidad; i++) {
+        fprintf(archivo, "%02d/%02d/%04d,%02d:00,%s,%.2f\n",
+                fecha.day, fecha.month, fecha.year, fecha.hour,
+                zonas[i].nombre,
+                zonas[i].contamDatos[4]);  // Índice 4 = CO2
+    }
+
+    fclose(archivo);
+    printf("Datos de CO2 guardados correctamente en el archivo historico.\n");
+}
 
 
+void MostrarReporte(){
+    printf("================================ REPORTE DE CONTAMINACIÓN ================================\n");
+    printf("Fecha y hora de registro: %02d/%02d/%04d %02d:00\n\n", 
+           fecha.day, fecha.month, fecha.year, fecha.hour);
+
+    printf("%-12s | %-12s | %-10s | %-15s | %-10s\n", 
+           "Zona", "Contaminante", "Actual", "Prediccion 24h", "Pendiente");
+    printf("------------------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            printf("%-12s | %-12s | %-10.2f | %-15.2f | %-10.6f\n",
+                   zonas[i].nombre,
+                   zonas[i].contaminantes[j].nom,
+                   zonas[i].contamDatos[j],
+                   zonas24[i].contamDatos[j],
+                   zonas[i].pendiente[j]);
+        }
+    }
+
+    printf("==========================================================================================\n");
+}
 
