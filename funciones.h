@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
 //Estructuras
 struct Contaminante {
         char nom[20];
@@ -243,4 +244,8 @@ void GenerarReporte() {
     fclose(reporte);
     printf("Reporte generado correctamente.\n");
 }
+
+
+
+
 
