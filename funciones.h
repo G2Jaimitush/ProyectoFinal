@@ -2,6 +2,15 @@
 #include <stdlib.h>
 #include <math.h>
 
+#define LIM_PM25 15
+#define LIM_PM10 45
+#define LIM_NO2 25
+#define LIM_SO2 40
+#define LIM_CO 4
+
+//Se definenn los limites de contamacion segun la OMS para así tener la restriccion
+
+
 //Estructuras
 struct Contaminante {
         char nom[20];
@@ -240,6 +249,8 @@ void GenerarReporte() {
                 zonas[i].pendiente[j]);
         }
         //AQUÍ FALTA IMRIMIR ALERTAS Y RECOMENDACIONES
+        
+
     }
     fclose(reporte);
     printf("Reporte generado correctamente.\n");
@@ -290,3 +301,15 @@ void MostrarReporte(){
     printf("==========================================================================================\n");
 }
 
+void MenuDeOpciones (){
+
+    int opc;
+    printf ("\n=== Prediccion de Contaminacion ===\n");
+    printf ("1. Ingresar datos de contaminacion\n");
+    printf ("2. Calcular niveles de contaminacion en las proximas 24 horas\n");
+    printf ("3. Generar reporte de contaminacion\n");
+    printf ("4. Salir\n");
+    printf ("Ingrese una opcion: ");
+    scanf ("%d", &opc);
+
+}
