@@ -257,9 +257,10 @@ void GenerarReporte() {
 }
 
 
-void GuardarDatosCO2 (){
+//Datos de CO
+void GuardarDatosCO (){
     //Abre el archivo CSV para guardar los datos de CO2
-    FILE *archivo = fopen("C:\\Users\\jaime\\Documents\\Ejercicios VSCode\\.vscode\\ProyectoFinalProgramacion\\ProyectoFinal\\DatosHistoticosCO2.csv", "a");
+    FILE *archivo = fopen("C:\\Users\\jaime\\Documents\\Ejercicios VSCode\\.vscode\\ProyectoFinalProgramacion\\ProyectoFinal\\DatosHistoricosCO.csv", "a");
 
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo CSV para escritura.\n");
@@ -270,13 +271,100 @@ void GuardarDatosCO2 (){
         fprintf(archivo, "%02d/%02d/%04d,%02d:00,%s,%.2f\n",
                 fecha.day, fecha.month, fecha.year, fecha.hour,
                 zonas[i].nombre,
-                zonas[i].contamDatos[4]);  // Índice 4 = CO2
+                zonas[i].contamDatos[4]);  // Índice 4 = CO
     }
 
     fclose(archivo);
-    printf("Datos de CO2 guardados correctamente en el archivo historico.\n");
+    printf("Datos de CO guardados correctamente en el archivo historico.\n");
 }
 
+
+//Datos de SO2
+void GuardarDatosSO2 (){
+    //Abre el archivo CSV para guardar los datos de SO2
+    FILE *archivo = fopen("C:\\Users\\jaime\\Documents\\Ejercicios VSCode\\.vscode\\ProyectoFinalProgramacion\\ProyectoFinal\\DatosHistoricosSO2.csv", "a");
+
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo CSV para escritura.\n");
+        return;
+    }
+
+    for (int i = 0; i < cantidad; i++) {
+        fprintf(archivo, "%02d/%02d/%04d,%02d:00,%s,%.2f\n",
+                fecha.day, fecha.month, fecha.year, fecha.hour,
+                zonas[i].nombre,
+                zonas[i].contamDatos[3]);  // Índice 3 = SO2
+    }
+
+    fclose(archivo);
+    printf("Datos de SO2 guardados correctamente en el archivo historico.\n");
+}
+
+
+
+//Datos de NO2
+void GuardarDatosNO2 (){
+    //Abre el archivo CSV para guardar los datos de NO2
+    FILE *archivo = fopen("C:\\Users\\jaime\\Documents\\Ejercicios VSCode\\.vscode\\ProyectoFinalProgramacion\\ProyectoFinal\\DatosHistoricosNO2.csv", "a");
+
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo CSV para escritura.\n");
+        return;
+    }
+
+    for (int i = 0; i < cantidad; i++) {
+        fprintf(archivo, "%02d/%02d/%04d,%02d:00,%s,%.2f\n",
+                fecha.day, fecha.month, fecha.year, fecha.hour,
+                zonas[i].nombre,
+                zonas[i].contamDatos[2]);  // Índice 2 = NO2
+    }
+
+    fclose(archivo);
+    printf("Datos de NO2 guardados correctamente en el archivo historico.\n");
+}
+
+
+//Datos de PM10
+void GuardarDatosPM10 (){
+    //Abre el archivo CSV para guardar los datos de PM10
+    FILE *archivo = fopen("C:\\Users\\jaime\\Documents\\Ejercicios VSCode\\.vscode\\ProyectoFinalProgramacion\\ProyectoFinal\\DatosHistoricosPM10.csv", "a");
+
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo CSV para escritura.\n");
+        return;
+    }
+
+    for (int i = 0; i < cantidad; i++) {
+        fprintf(archivo, "%02d/%02d/%04d,%02d:00,%s,%.2f\n",
+                fecha.day, fecha.month, fecha.year, fecha.hour,
+                zonas[i].nombre,
+                zonas[i].contamDatos[1]);  // Índice 1 = PM10
+    }
+
+    fclose(archivo);
+    printf("Datos de PM10 guardados correctamente en el archivo historico.\n");
+}
+
+//Datos de PM2.5
+void GuardarDatosPM25 (){
+    //Abre el archivo CSV para guardar los datos de PM2.5
+    FILE *archivo = fopen("C:\\Users\\jaime\\Documents\\Ejercicios VSCode\\.vscode\\ProyectoFinalProgramacion\\ProyectoFinal\\DatosHistoricosPM25.csv", "a");
+
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo CSV para escritura.\n");
+        return;
+    }
+
+    for (int i = 0; i < cantidad; i++) {
+        fprintf(archivo, "%02d/%02d/%04d,%02d:00,%s,%.2f\n",
+                fecha.day, fecha.month, fecha.year, fecha.hour,
+                zonas[i].nombre,
+                zonas[i].contamDatos[0]);  // Índice 0 = PM2.5
+    }
+
+    fclose(archivo);
+    printf("Datos de PM2.5 guardados correctamente en el archivo historico.\n");
+}
 
 void MostrarReporte(){
     printf("================================ REPORTE DE CONTAMINACIÓN ================================\n");
@@ -300,6 +388,7 @@ void MostrarReporte(){
 
     printf("==========================================================================================\n");
 }
+
 
 void MenuDeOpciones (){
 

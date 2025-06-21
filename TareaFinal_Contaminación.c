@@ -19,6 +19,5 @@ Header 1
 int main()
 {
     Inicioprograma();
-
     return 0;
 }
