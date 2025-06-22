@@ -89,7 +89,7 @@ void FuncionOregano(){
         }
     }
 
-    // Validación del mes
+   // Validación del mes
     valido = 0;
     valido2 = 0;
 
@@ -112,12 +112,18 @@ void FuncionOregano(){
         fecha.month = (int)valido2;
 
         if (fecha.month >= 1 && fecha.month <= 12) {
+            // Validación especial para 2025: no permitir meses 1 a 5
+            if (fecha.year == 2025 && fecha.month <= 5) {
+                printf("No se puede realizar la validacion para meses de enero a mayo de 2025.\n");
+                goto REPETIR_MES;
+            }
             valido = 1;
         } else {
             printf("Mes invalido. Debe estar entre 1 y 12.\n");
             goto REPETIR_MES;
         }
     }
+
 
     // Validación del día
     valido = 0;
@@ -214,6 +220,8 @@ void FuncionOregano(){
                 if (scanf("%f", &contaminacion) != 1) {
                     printf("Nivel de concentracion invalido. Debe ser un numero flotante. Intente nuevamente:\n");
                     while (getchar() != '\n'); // Limpia el buffer
+                } else if (contaminacion < 0) {
+                    printf("El valor no puede ser negativo. Ingrese un valor valido:\n");
                 } else {
                     zonas[i].contamDatos[j] = contaminacion;
                     valido = 1;
@@ -221,6 +229,7 @@ void FuncionOregano(){
             }
         }
     }
+
 }
 
 
@@ -353,7 +362,7 @@ void PredecirCOPendienteCalculada() {
 
 void MostrarPrediccionCO24Horas() {
     printf("\n========= PREDICCION DE CO PARA LAS PROXIMAS 24 HORAS =========\n");
-    printf("%-15s | %-10s\n", "Zona", "Promedio CO");
+    printf("%-15s | %-10s\n", "Zona", "Prediccion CO");
     printf("-------------------------------------------\n");
 
     for (int i = 0; i < cantidad; i++) {
@@ -391,7 +400,7 @@ void PredecirSO2Pendiente() {
 
 void MostrarPrediccionSO2_24Horas() {
     printf("\n========= PROMEDIO DE PREDICCION DE SO2 PARA LAS PROXIMAS 24 HORAS =========\n");
-    printf("%-15s | %-10s\n", "Zona", "Promedio SO2");
+    printf("%-15s | %-10s\n", "Zona", "Prediccion SO2");
     printf("-------------------------------------------\n");
 
     for (int i = 0; i < cantidad; i++) {
@@ -428,7 +437,7 @@ void PredecirNO2Pendiente() {
 
 void MostrarPrediccionNO2_24Horas() {
 printf("\n========= PREDICCION DE NO2 PARA LAS PROXIMAS 24 HORAS =========\n");
-    printf("%-15s | %-10s\n", "Zona", "Promedio NO2");
+    printf("%-15s | %-10s\n", "Zona", "Prediccion NO2");
     printf("-------------------------------------------\n");
 
     for (int i = 0; i < cantidad; i++) {
@@ -466,7 +475,7 @@ void PredecirPM10Pendiente() {
 
 void MostrarPrediccionPM10_24Horas() {
     printf("\n========= PREDICCION DE PM10 PARA LAS PROXIMAS 24 HORAS =========\n");
-    printf("%-15s | %-10s\n", "Zona", "Promedio PM10");
+    printf("%-15s | %-10s\n", "Zona", "Prediccion PM10");
     printf("-------------------------------------------\n");
 
     for (int i = 0; i < cantidad; i++) {
@@ -504,7 +513,7 @@ void PredecirPM25Pendiente() {
 
 void MostrarPrediccionPM25_24Horas() {
     printf("\n========= PREDICCION DE PM2.5 PARA LAS PROXIMAS 24 HORAS =========\n");
-    printf("%-15s | %-10s\n", "Zona", "Promedio PM2.5");
+    printf("%-15s | %-10s\n", "Zona", "Prediccion PM2.5");
     printf("-------------------------------------------\n");
 
     for (int i = 0; i < cantidad; i++) {
@@ -591,22 +600,48 @@ void GenerarReporte() {
     }
     fclose(reporte);
     printf("Reporte generado correctamente.\n");
-    printf("Desea agregar este reporte al reporte general? (1(si)/0(No)): \n");
     int agregarReporte;
-    scanf("%d", &agregarReporte);
-    if (agregarReporte == 1) {
-        FILE *reporteGeneral = fopen("reporte_general.txt", "a+");
-        if (reporteGeneral == NULL) {
-            printf("No se pudo abrir el archivo de reporte general.\n");
-            return;
+    int valido = 0;
+    float valido2 = 0;
+
+    REPETIR_AGREGAR:
+    while (valido == 0) {
+        printf("Desea agregar este reporte al reporte general? (1(si)/0(No)): ");
+
+        if (scanf("%f", &valido2) != 1) {
+            printf("Debe ingresar un numero. Intente de nuevo.\n");
+            while (getchar() != '\n');
+            goto REPETIR_AGREGAR;
         }
-        IncluirArchivoEnReporte(reporteGeneral, "reporte_contaminacion.txt");
-        fclose(reporteGeneral);
-        printf("Reporte agregado al reporte general correctamente.\n");
-    } else {
-        printf("Reporte no agregado al reporte general.\n");
+
+        if (ceilf(valido2) != valido2) {
+            printf("Debe ingresar un numero entero sin decimales. Intente de nuevo.\n");
+            while (getchar() != '\n');
+            goto REPETIR_AGREGAR;
+        }
+
+        agregarReporte = (int)valido2;
+
+        if (agregarReporte == 1) {
+            FILE *reporteGeneral = fopen("reporte_general.txt", "a+");
+            if (reporteGeneral == NULL) {
+                printf("No se pudo abrir el archivo de reporte general.\n");
+                return;
+            }
+            IncluirArchivoEnReporte(reporteGeneral, "reporte_contaminacion.txt");
+            fclose(reporteGeneral);
+            printf("Reporte agregado al reporte general correctamente.\n");
+            valido = 1;
+        } else if (agregarReporte == 0) {
+            printf("Reporte no agregado al reporte general.\n");
+            valido = 1;
+        } else {
+            printf("Opcion invalida. Debe ingresar 1 (si) o 0 (no). Intente de nuevo.\n");
+            goto REPETIR_AGREGAR;
+        }
     }
 }
+
 
 
 // Función auxiliar que agrega linea a línea el contenido de un archivo a otro
@@ -668,7 +703,7 @@ void MenuDeOpciones (){
 
         switch (opc) {
             case 1:
-                IngresoDatos();
+                FuncionOregano();
                 hecho++;
                 break;
             case 2:
