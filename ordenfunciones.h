@@ -10,7 +10,7 @@ void Inicioprograma(){
 
     // ======================== INGRESO DE DATOS ========================
     
-    IngresoDatos();
+    FuncionOregano();
 
     // ======================== GUARDAR DATOS ===========================
     GuardarDatosCO();

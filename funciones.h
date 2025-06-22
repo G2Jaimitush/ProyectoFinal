@@ -55,7 +55,8 @@ struct Contaminante {
 
 
 
-void IngresoDatos(){
+void FuncionOregano(){
+//Funcion de Ingreso de datos
 
  // Validación del año
     int valido = 0;
@@ -659,7 +660,12 @@ void MenuDeOpciones (){
         printf ("3. Generar reporte de contaminacion\n");
         printf ("4. Salir\n");
         printf ("Ingrese una opcion: ");
-        scanf ("%d", &opc);
+        if (scanf("%d", &opc) != 1) {
+            printf("Debe ingresar un número entero.\n");
+            while (getchar() != '\n'); // Limpia el buffer
+            opc = -1; // Para que entre al default
+        }
+
         switch (opc) {
             case 1:
                 IngresoDatos();
