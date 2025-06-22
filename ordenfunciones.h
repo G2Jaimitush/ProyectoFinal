@@ -9,6 +9,7 @@ void Inicioprograma(){
     printf("Bienvenido al sistema de prediccion de contaminacion.\n");
 
     // ======================== INGRESO DE DATOS ========================
+    
     IngresoDatos();
 
     // ======================== GUARDAR DATOS ===========================
@@ -36,5 +37,7 @@ void Inicioprograma(){
 
     // ======================== GENERAR REPORTE FINAL ===================
     GenerarReporte();
+    MostrarReporte();
+    MenuDeOpciones();
 
 };

@@ -11,6 +11,9 @@
 
 //Se definenn los limites de contamacion segun la OMS para así tener la restriccion
 
+//Se declara la función que incluirá el contenido de un archivo en el reporte
+//Es la unica funcion que se declara antes de su uso ya que cuando se genera el reporte, se necesita incluir los archivos de recomendaciones y alertas
+void IncluirArchivoEnReporte(FILE *reporte, const char *nombreArchivo);
 
 //Estructuras
 struct Contaminante {
@@ -219,46 +222,8 @@ void IngresoDatos(){
     }
 }
 
-void CalcProximas24Horas() {
-    // Esta función se encarga de calcular los niveles de contaminación en las próximas 24 horas.
-    for(int i = 0; i < 5; i++) {
-        
-        for(int j = 0; j < 5; j++) {
-            // Aquí se implementaría la lógica para calcular los niveles de contaminación.
-            // Por simplicidad, solo se imprime un mensaje.
-            printf("Calculando niveles de %s en %s...\n", zonas[i].contaminantes[j].nom, zonas[i].nombre);
-                   zonas24[i].contamDatos[j] = zonas[i].contamDatos[j] *zonas[i].pendiente[j]; 
-            
-        }
-        
-    }
-}
 
-void GenerarReporte() {
-    FILE *reporte = fopen("reporte_contaminacion.txt", "w");
-    if (reporte == NULL) {
-        printf("No se pudo crear el archivo de reporte.\n");
-        return;
-    }
-    fprintf(reporte, "Fecha y hora de registro: %02d/%02d/%04d %02d:00\n\n", 
-            fecha.day, fecha.month, fecha.year, fecha.hour);
-    fprintf(reporte, "Zona\t\tContaminante\tActual\tPredicción 24h\tPendiente\n");
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-            fprintf(reporte, "%-12s\t%-12s\t%.2f\t%.2f\t%.6f\n",
-                zonas[i].nombre,
-                zonas[i].contaminantes[j].nom,
-                zonas[i].contamDatos[j],
-                zonas24[i].contamDatos[j],
-                zonas[i].pendiente[j]);
-        }
-        //AQUÍ FALTA IMRIMIR ALERTAS Y RECOMENDACIONES
-        
 
-    }
-    fclose(reporte);
-    printf("Reporte generado correctamente.\n");
-}
 
 
 //Datos de CO
@@ -317,7 +282,7 @@ void GuardarDatosNO2 (){
     }
 
     for (int i = 0; i < cantidad; i++) {
-        fprintf(archivo, "%02d/%02d/%04d,%02d:00,%s,%.2f\n",
+        fprintf(archivo, "%02d/%02d/%04d;%02d:00;%s;%.2f\n",
                 fecha.day, fecha.month, fecha.year, fecha.hour,
                 zonas[i].nombre,
                 zonas[i].contamDatos[2]);  // Índice 2 = NO2
@@ -339,7 +304,7 @@ void GuardarDatosPM10 (){
     }
 
     for (int i = 0; i < cantidad; i++) {
-        fprintf(archivo, "%02d/%02d/%04d,%02d:00,%s,%.2f\n",
+        fprintf(archivo, "%02d/%02d/%04d;%02d:00;%s;%.2f\n",
                 fecha.day, fecha.month, fecha.year, fecha.hour,
                 zonas[i].nombre,
                 zonas[i].contamDatos[1]);  // Índice 1 = PM10
@@ -360,7 +325,7 @@ void GuardarDatosPM25 (){
     }
 
     for (int i = 0; i < cantidad; i++) {
-        fprintf(archivo, "%02d/%02d/%04d,%02d:00,%s,%.2f\n",
+        fprintf(archivo, "%02d/%02d/%04d;%02d:00;%s;%.2f\n",
                 fecha.day, fecha.month, fecha.year, fecha.hour,
                 zonas[i].nombre,
                 zonas[i].contamDatos[0]);  // Índice 0 = PM2.5
@@ -368,43 +333,6 @@ void GuardarDatosPM25 (){
 
     fclose(archivo);
     printf("Datos de PM2.5 guardados correctamente en el archivo historico.\n");
-}
-
-void MostrarReporte(){
-    printf("================================ REPORTE DE CONTAMINACIÓN ================================\n");
-    printf("Fecha y hora de registro: %02d/%02d/%04d %02d:00\n\n", 
-           fecha.day, fecha.month, fecha.year, fecha.hour);
-
-    printf("%-12s | %-12s | %-10s | %-15s | %-10s\n", 
-           "Zona", "Contaminante", "Actual", "Prediccion 24h", "Pendiente");
-    printf("------------------------------------------------------------------------------------------\n");
-
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-            printf("%-12s | %-12s | %-10.2f | %-15.2f | %-10.6f\n",
-                   zonas[i].nombre,
-                   zonas[i].contaminantes[j].nom,
-                   zonas[i].contamDatos[j],
-                   zonas24[i].contamDatos[j],
-                   zonas[i].pendiente[j]);
-        }
-    }
-
-    printf("==========================================================================================\n");
-}
-
-
-void MenuDeOpciones (){
-
-    int opc;
-    printf ("\n=== Prediccion de Contaminacion ===\n");
-    printf ("1. Ingresar datos de contaminacion\n");
-    printf ("2. Calcular niveles de contaminacion en las proximas 24 horas\n");
-    printf ("3. Generar reporte de contaminacion\n");
-    printf ("4. Salir\n");
-    printf ("Ingrese una opcion: ");
-    scanf ("%d", &opc);
-
 }
 
 
@@ -596,3 +524,180 @@ void MostrarPrediccionPM25_24Horas() {
     printf("=============================================================================\n");
 }
 
+
+void GenerarReporte() {
+    FILE *reporte = fopen("reporte_contaminacion.txt", "w");
+    
+    if (reporte == NULL) {
+        printf("No se pudo crear el archivo de reporte.\n");
+        return;
+    }
+    fprintf(reporte, "Fecha y hora de registro: %02d/%02d/%04d %02d:00\n\n", 
+            fecha.day, fecha.month, fecha.year, fecha.hour);
+    fprintf(reporte, "Zona\t\tContaminante\tActual\tPredicción 24h\tPendiente\n");
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            fprintf(reporte, "%-12s\t%-12s\t%.2f\t%.2f\t%.6f\n",
+                zonas[i].nombre,
+                zonas[i].contaminantes[j].nom,
+                zonas[i].contamDatos[j],
+                zonas24[i].contamDatos[j],
+                zonas[i].pendiente[j]);
+        }
+        //AQUÍ FALTA IMRIMIR ALERTAS Y RECOMENDACIONES
+      // Determinar contaminante con mayor contaminación
+        int idx_mayor = 0;
+        float max_contaminacion = zonas[i].contamDatos[0]; //establece el máximo como el primer dato del primer contaminante
+        // Recorre los contaminantes para encontrar el de mayor contaminación
+        for (int j = 1; j < 5; j++) {
+            if (zonas[i].contamDatos[j] > max_contaminacion) {
+                max_contaminacion = zonas[i].contamDatos[j];
+                idx_mayor = j;
+            }
+        }
+
+        fprintf(reporte, "\nContaminante más crítico en %s: %s (%.2f) - ",
+                zonas[i].nombre,
+                zonas[i].contaminantes[idx_mayor].nom,
+                max_contaminacion);
+
+        // Clasificación y recomendación con archivo correspondiente
+        if (max_contaminacion >= 0 && max_contaminacion <= 12.0) {
+            fprintf(reporte, "Clasificación: Buena (Verde)\n");
+            IncluirArchivoEnReporte(reporte, "contaminacion_n1.txt");
+            printf("Se actualizaron las recomendaciones para la zona %s miralas.\n", zonas[i].nombre);
+
+        } else if (max_contaminacion > 12.0 && max_contaminacion <= 35.4) {
+            fprintf(reporte, "Clasificación: Moderada (Amarilla)\n");
+            IncluirArchivoEnReporte(reporte, "contaminacion_n2.txt");
+            printf("Se actualizaron las recomendaciones para la zona %s miralas.\n", zonas[i].nombre);
+        } else if (max_contaminacion > 35.4 && max_contaminacion <= 55.4) {
+            fprintf(reporte, "Clasificación: Dañina para Grupos Sensibles (Naranja)\n");
+            IncluirArchivoEnReporte(reporte, "contaminacion_n3.txt");
+            printf("Se actualizaron las recomendaciones para la zona %s miralas.\n", zonas[i].nombre);
+        } else if (max_contaminacion > 55.4 && max_contaminacion <= 150.4) {
+            fprintf(reporte, "Clasificación: Dañina (Roja)\n");
+            IncluirArchivoEnReporte(reporte, "contaminacion_n4.txt");
+            printf("Se actualizaron las recomendaciones para la zona %s miralas.\n", zonas[i].nombre);
+        } else if (max_contaminacion > 150.4) {
+            fprintf(reporte, "Clasificación: Muy Dañina o Peligrosa (Morada/Granate Oscuro)\n");
+            IncluirArchivoEnReporte(reporte, "contaminacion_n5.txt");
+            printf("Se actualizaron las recomendaciones para la zona %s miralas.\n", zonas[i].nombre);
+        } else {
+            fprintf(reporte, "Valor fuera de rango\n");
+        }
+
+    }
+    fclose(reporte);
+    printf("Reporte generado correctamente.\n");
+    printf("Desea agregar este reporte al reporte general? (1(si)/0(No)): \n");
+    int agregarReporte;
+    scanf("%d", &agregarReporte);
+    if (agregarReporte == 1) {
+        FILE *reporteGeneral = fopen("reporte_general.txt", "a+");
+        if (reporteGeneral == NULL) {
+            printf("No se pudo abrir el archivo de reporte general.\n");
+            return;
+        }
+        IncluirArchivoEnReporte(reporteGeneral, "reporte_contaminacion.txt");
+        fclose(reporteGeneral);
+        printf("Reporte agregado al reporte general correctamente.\n");
+    } else {
+        printf("Reporte no agregado al reporte general.\n");
+    }
+}
+
+
+// Función auxiliar que agrega linea a línea el contenido de un archivo a otro
+void IncluirArchivoEnReporte(FILE *reporte, const char *nombreArchivo) {
+    FILE *info = fopen(nombreArchivo, "r");
+    if (info) {
+        char linea[256];
+        while (fgets(linea, sizeof(linea), info)) {
+            fputs(linea, reporte);
+        }
+        fclose(info);
+    } else {
+        fprintf(reporte, "[No se pudo abrir %s]\n", nombreArchivo);
+    }
+}
+
+
+void MostrarReporte(){
+    printf("================================ REPORTE DE CONTAMINACION ================================\n");
+    printf("Fecha y hora de registro: %02d/%02d/%04d %02d:00\n\n", 
+           fecha.day, fecha.month, fecha.year, fecha.hour);
+
+    printf("%-12s | %-12s | %-10s | %-15s | %-10s\n", 
+           "Zona", "Contaminante", "Actual", "Prediccion 24h", "Pendiente");
+    printf("------------------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            printf("%-12s | %-12s | %-10.2f | %-15.2f | %-10.6f\n",
+                   zonas[i].nombre,
+                   zonas[i].contaminantes[j].nom,
+                   zonas[i].contamDatos[j],
+                   zonas24[i].contamDatos[j],
+                   zonas[i].pendiente[j]);
+        }
+    }
+
+    printf("==========================================================================================\n");
+}
+
+
+
+
+void MenuDeOpciones (){
+    int opc,hecho = 0; // Variable para controlar si se han ingresado datos
+
+    do{
+        printf ("\n=== Prediccion de Contaminacion ===\n");
+        printf ("1. Ingresar datos de contaminacion\n");
+        printf ("2. Calcular niveles de contaminacion en las proximas 24 horas\n");
+        printf ("3. Generar reporte de contaminacion\n");
+        printf ("4. Salir\n");
+        printf ("Ingrese una opcion: ");
+        scanf ("%d", &opc);
+        switch (opc) {
+            case 1:
+                IngresoDatos();
+                hecho++;
+                break;
+            case 2:
+            if (hecho == 0) {
+                    printf("Debe ingresar los datos de contaminacion antes de calcular los niveles.\n");
+                    break;
+                } else {
+                    printf("Niveles de contaminacion calculados correctamente.\n");
+                    hecho++;
+                }
+                PredecirCOPendienteCalculada();
+                PredecirPM10Pendiente();
+                PredecirPM25Pendiente();
+                PredecirNO2Pendiente();
+                PredecirSO2Pendiente();
+                MostrarPrediccionCO24Horas();
+                MostrarPrediccionPM10_24Horas();
+                MostrarPrediccionPM25_24Horas();
+                MostrarPrediccionNO2_24Horas();
+                MostrarPrediccionSO2_24Horas();
+                
+                break;
+            case 3:
+                if (hecho <2) {
+                    printf("Debe ingresar los datos de contaminacion antes de generar el reporte.\n");
+                    break;
+                }
+                GenerarReporte();
+                MostrarReporte();
+                break;
+            case 4:
+                printf("Saliendo del programa...\n");
+                exit(0);
+            default:
+                printf("Opcion invalida. Intente de nuevo.\n");
+        }
+    }while (opc != 4);
+}
