@@ -16,7 +16,7 @@
 void IncluirArchivoEnReporte(FILE *reporte, const char *nombreArchivo);
 
 //Estructuras
-struct Contaminante {
+    struct Contaminante {
         char nom[20];
     };
     struct registroFecha {
@@ -26,6 +26,7 @@ struct Contaminante {
         int hour;   
     };
     typedef struct registroFecha Fecha;
+
     struct Zona {
         char nombre[20];
         struct Contaminante contaminantes[5];
@@ -34,11 +35,11 @@ struct Contaminante {
     };
 
     struct Zona zonas[5] = {
-        {"Belisario",  {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0}, {-0.16809, -0.277532929, 0.154716942, -0.007614, 0.01113441}},
-        {"Centro",     {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0}, { 0.0554,   0.964459,    -0.072728931, -0.0739445, 0.00633295}},
-        {"Cotocollao", {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0}, { 0.107786, 0.047835,     0.033273232, -0.0051026, 0.004077135}},
-        {"Los Chillos",{{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0}, { 0.254448, -1.14707,     0.343161221,  0.00399695, 0.00917739}},
-        {"Tumbaco",    {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0}, {-0.0696,   0.346828,     0.243433055,  0.01567613, -0.00264876}}
+        {"Belisario",  {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0}, {-0.16809, -0.277532929, 0.154716942,-0.007614, 0.01113441}},
+        {"Centro",     {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0}, { 0.0554,0.964459, -0.072728931,-0.0739445,0.00633295}},
+        {"Cotocollao", {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0}, { 0.107786, 0.047835,0.033273232,-0.0051026,0.004077135}},
+        {"Los Chillos",{{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0}, { 0.254448, -1.14707,0.343161221,0.00399695,0.00917739}},
+        {"Tumbaco",    {{"PM2.5"}, {"PM10"}, {"NO2"}, {"SO2"}, {"CO"}}, {0}, {-0.0696,0.346828,0.243433055,0.01567613,-0.00264876}}
     };
 
     struct Zona zonas24[5] = {
